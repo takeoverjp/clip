@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import sys
 import cv2
 import numpy as np
 
@@ -9,7 +10,9 @@ MARGIN = 30
 
 def clip(im):
   gray = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
-  ret, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+  ret, thresh = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY)
+  # thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C,\
+  #                                cv2.THRESH_BINARY,11,2)
   neg = cv2.bitwise_not(thresh)
   kernel = np.ones((3,3),np.uint8)
   morph = cv2.morphologyEx(neg, cv2.MORPH_OPEN, kernel)
@@ -38,20 +41,24 @@ def clip(im):
   return result
 
 if __name__ == '__main__':
-  im = cv2.imread("data/001.jpg")
-  height = int(round(im.shape[0]/8))
-  width  = int(round(im.shape[1]/8))
-  resize = cv2.resize(im, (width, height))
+  if len(sys.argv) != 3:
+    print('[USAGE] ' + sys.argv[0] + ' INFILE OUTFILE')
+    exit(1)
 
-  clipped = clip(resize)
+  infile = sys.argv[1]
+  outfile = sys.argv[2]
 
-  clipped.tofile("data/001_clipped.raw")
+  im = cv2.imread(infile)
 
-  f = np.fromfile('data/001_clipped.raw',
+  clipped = clip(im)
+
+  clipped.tofile(outfile)
+
+  f = np.fromfile(outfile,
                   dtype=np.uint8,
                   count=OUTPUT_SIZE[0]*OUTPUT_SIZE[1])
   result = f.reshape(OUTPUT_SIZE)
-  cv2.imshow('input', resize)
+  cv2.imshow('input', im)
   cv2.imshow('result', result)
   cv2.waitKey()
   cv2.destroyAllWindows()
