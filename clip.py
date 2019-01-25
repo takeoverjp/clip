@@ -6,7 +6,7 @@ import numpy as np
 
 DEBUG_CLIP=False
 OUTPUT_SIZE = (28, 28)
-MARGIN = 60
+MARGIN = 100
 
 def clip(im):
   gray = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
@@ -31,6 +31,12 @@ def clip(im):
   elif w < h:
     x = x - (h-w)/2
     w = h
+
+  x = max(x, 0)
+  w = min(w, im.shape[1])
+  y = max(y, 0)
+  h = min(h, im.shape[0])
+
   clip = dilate[y:y+h, x:x+w]
   result = cv2.resize(clip, OUTPUT_SIZE)
 
@@ -61,6 +67,7 @@ if __name__ == '__main__':
 
   clipped.tofile(outfile)
 
+  exit(0)
   f = np.fromfile(outfile,
                   dtype=np.uint8,
                   count=OUTPUT_SIZE[0]*OUTPUT_SIZE[1])
