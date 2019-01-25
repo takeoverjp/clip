@@ -6,7 +6,7 @@ import numpy as np
 
 DEBUG_CLIP=False
 OUTPUT_SIZE = (28, 28)
-MARGIN = 100
+MARGIN = 60
 
 def clip(im):
   gray = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
@@ -16,7 +16,7 @@ def clip(im):
   neg = cv2.bitwise_not(thresh)
   kernel = np.ones((3,3),np.uint8)
   morph = cv2.morphologyEx(neg, cv2.MORPH_OPEN, kernel)
-  kernel = np.ones((7,7),np.uint8)
+  kernel = np.ones((15,15),np.uint8)
   dilate = cv2.dilate(morph, kernel, iterations=2)
   x,y,w,h = cv2.boundingRect(dilate)
 
