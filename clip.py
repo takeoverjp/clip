@@ -6,7 +6,7 @@ import numpy as np
 
 DEBUG_CLIP=False
 OUTPUT_SIZE = (28, 28)
-MARGIN = 30
+MARGIN = 60
 
 def clip(im):
   gray = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
