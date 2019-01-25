@@ -24,6 +24,13 @@ def clip(im):
   w = w + MARGIN * 2
   y = y - MARGIN
   h = h + MARGIN * 2
+
+  if w > h:
+    y = y - (w-h)/2
+    h = w
+  elif w < h:
+    x = x - (h-w)/2
+    w = h
   clip = dilate[y:y+h, x:x+w]
   result = cv2.resize(clip, OUTPUT_SIZE)
 
