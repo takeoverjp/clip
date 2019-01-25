@@ -1,3 +1,4 @@
 *~
 *.bmp
-data/*_clipped.raw
+data/*.raw
+data/*.mnist
